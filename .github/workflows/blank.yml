@@ -17,8 +17,7 @@ virtual-pc/
     ├── index.html
     ├── style.css
     └── app.js
-
- name: virtual-pc
+    name: virtual-pc
 
 cpu:
   cores: 8
