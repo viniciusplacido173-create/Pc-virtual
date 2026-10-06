@@ -16,9 +16,8 @@ virtual-pc/
 └── web/
     ├── index.html
     ├── style.css
-    └── app.js
-
-cpu:
+    └── app.j
+    cpu:
   cores: 8
   mode: host-passthrough
 
