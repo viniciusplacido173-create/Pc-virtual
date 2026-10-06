@@ -1,0 +1,127 @@
+virtual-pc/
+├── README.md
+├── LICENSE
+├── .gitignore
+├── docker-compose.yml
+├── config/
+│   ├── vm.yaml
+│   └── network.yaml
+├── scripts/
+│   ├── install.sh
+│   ├── create-vm.sh
+│   ├── start-vm.sh
+│   └── stop-vm.sh
+├── vm/
+│   └── windows11.xml
+└── web/
+    ├── index.html
+    ├── style.css
+    └── app.js
+
+    name: virtual-pc
+
+cpu:
+  cores: 8
+  mode: host-passthrough
+
+memory:
+  ram: 32GB
+
+storage:
+  size: 250GB
+  interface: virtio
+
+network:
+  interface: virtio
+
+firmware:
+  type: UEFI
+
+virtualization:
+  engine: KVM
+  manager: QEMU
+
+  #!/bin/bash
+
+set -e
+
+VM_NAME="virtual-pc"
+DISK="virtual-pc.qcow2"
+RAM="32G"
+CPUS="8"
+DISK_SIZE="250G"
+
+echo "Criando disco da VM..."
+
+qemu-img create -f qcow2 "$DISK" "$DISK_SIZE"
+
+echo "Criando máquina virtual..."
+
+virt-install \
+  --name "$VM_NAME" \
+  --memory "$RAM" \
+  --vcpus "$CPUS" \
+  --disk "$DISK",format=qcow2,bus=virtio \
+  --network network=default,model=virtio \
+  --os-variant win11 \
+  --boot uefi \
+  --graphics spice \
+  --noautoconsole
+
+echo "VM criada com sucesso!"
+
+#!/bin/bash
+
+VM_NAME="virtual-pc"
+
+virsh start "$VM_NAME"
+
+echo "PC virtual iniciado."
+
+#!/bin/bash
+
+VM_NAME="virtual-pc"
+
+virsh shutdown "$VM_NAME"
+
+echo "PC virtual desligando..."
+
+# Virtual PC
+
+Projeto de máquina virtual usando KVM/QEMU.
+
+## Recursos
+
+- 8 vCPUs
+- 32 GB RAM
+- 250 GB NVMe virtual
+- UEFI
+- VirtIO
+- Rede virtual
+- Windows 11
+- KVM/QEMU
+- Libvirt
+
+## Requisitos
+
+- Linux
+- CPU com virtualização habilitada
+- 64 GB de RAM recomendado
+- SSD NVMe
+- KVM
+- QEMU
+- Libvirt
+
+## Instalação
+
+```bash
+git clone https://github.com/SEU-USUARIO/virtual-pc.git
+cd virtual-pc
+
+chmod +x scripts/*.sh
+
+./scripts/create-vm.sh
+
+./scripts/start-vm.sh
+
+./scripts/stop-vm.sh
